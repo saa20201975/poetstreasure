@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اكتشف كنز عام 2025</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+        h1 {
+            color: #4CAF50;
+            margin: 20px 0;
+        }
+        #timer {
+            font-size: 18px;
+            margin: 10px;
+        }
+        .map-container {
+            margin: 20px auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 600px;
+        }
+        .poet {
+            margin: 10px;
+            padding: 10px;
+            background-color: #4caf50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .poet:hover {
+            background-color: #66bb6a;
+        }
+        .poet.found {
+            background-color: blue;
+            color: white;
+            cursor: default;
+        }
+        .poet.not-found {
+            background-color: red;
+            color: white;
+        }
+        .message {
+            font-size: 20px;
+            margin-top: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>اكتشف كنز عام 2025</h1>
+    <div id="timer">الوقت المتبقي: 10 ثواني</div>
+    <div class="map-container" id="mapContainer"></div>
+    <div id="message" class="message">ابحث عن الكنز بالنقر على أسماء الشعراء!</div>
+
+    <script>
+        const poets = [
+            "أبو الطيب المتنبي", "أحمد شوقي", "نزار قباني", "محمود درويش", "بدر شاكر السياب",
+            "الجواهري", "عبد الله ابن المعتز", "أدونيس", "جبران خليل جبران", "الفرزدق",
+            "جرير", "عنترة بن شداد", "الخنساء", "زهير بن أبي سلمى", "طرفة بن العبد",
+            "المعري", "الحطيئة", "ابن الرومي", "الكميت", "ليلى الأخيلية"
+        ];
+
+        const hiddenItem = "كنز عام 2025";
+        const mapContainer = document.getElementById("mapContainer");
+        const messageElement = document.getElementById("message");
+        const timerElement = document.getElementById("timer");
+
+        let timeRemaining = 10;
+        let foundTreasure = false;
+
+        // Randomly assign the treasure to one poet
+        const treasureIndex = Math.floor(Math.random() * poets.length);
+
+        // Create poet buttons
+        poets.forEach((poet, index) => {
+            const poetButton = document.createElement("button");
+            poetButton.className = "poet";
+            poetButton.textContent = poet;
+            poetButton.dataset.index = index;
+            mapContainer.appendChild(poetButton);
+
+            poetButton.addEventListener("click", () => {
+                handlePoetClick(poetButton, index);
+            });
+        });
+
+        // Handle poet click
+        function handlePoetClick(button, index) {
+            if (index === treasureIndex) {
+                button.classList.add("found");
+                button.textContent = `${button.textContent}: ${hiddenItem}`;
+                foundTreasure = true;
+                endGame(true);
+            } else {
+                button.classList.add("not-found");
+                setTimeout(() => {
+                    button.classList.remove("not-found");
+                }, 1000);
+            }
+            button.disabled = true;
+        }
+
+        // Countdown timer
+        const timer = setInterval(() => {
+            timeRemaining--;
+            timerElement.textContent = `الوقت المتبقي: ${timeRemaining} ثواني`;
+
+            if (timeRemaining <= 0) {
+                endGame(false);
+            }
+        }, 1000);
+
+        // End the game
+        function endGame(won) {
+            clearInterval(timer);
+            document.querySelectorAll(".poet").forEach(button => {
+                button.disabled = true;
+            });
+
+            if (won) {
+                messageElement.textContent = "مبروك! لقد وجدت الكنز!";
+                messageElement.style.color = "green";
+            } else {
+                messageElement.textContent = "انتهى الوقت! حظًا أوفر المرة القادمة!";
+                messageElement.style.color = "red";
+            }
+        }
+    </script>
+
+</body>
+</html>
